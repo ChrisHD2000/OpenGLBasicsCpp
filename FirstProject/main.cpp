@@ -19,7 +19,7 @@ GLuint createShaderProgram() {
 		"#version 430 \n"
 		"out vec4 color; \n"
 		"void main(void) \n"
-		"{ color = vec4(1.0, 0.0, 0.0, 1.0); }";
+		"{if (gl_FragCoord.x < 295) color = vec4(1.0, 0.0, 0.0, 1.0); else color = vec4(0.0, 0.0, 1.0, 1.0); }"; // color depends on position
 
 	// generates the two shaders of types GL_VERTEX_SHADER and GL_FRAGMENT_SHADER
 	// returns an integer ID for each that is an index for referencing it later
@@ -54,7 +54,7 @@ void init(GLFWwindow* window) {
 }
 void display(GLFWwindow* window, double currentTime) {
 	glUseProgram(renderingProgram);
-	glPointSize(30.0f); // comment this line to let the vertex be on its default size
+	glPointSize(100.0f); // comment this line to let the vertex be on its default size
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawArrays(GL_POINTS, 0, 1);
 }
