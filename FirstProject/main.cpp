@@ -1,6 +1,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
+#include <string>
+
 
 #define numVAOs 1
 
@@ -9,22 +12,36 @@ using namespace std;
 GLuint renderingProgram;
 GLuint vao[numVAOs];
 
+string readShaderSource(const char* filePath) {
+	string content;
+	ifstream fileStream(filePath, ios::in);
+	string line = "";
+		while (!fileStream.eof()) {
+			getline(fileStream, line);
+			content.append(line + "\n");
+		}
+	fileStream.close();
+	return content;
+}
+
+
 GLuint createShaderProgram() {
-	// declaring two shaders as character strings called vshaderSourceand fshaderSource
-	const char* vshaderSource =
-		"#version 430 \n"
-		"void main(void) \n"
-		"{ gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }";
-	const char* fshaderSource =
-		"#version 430 \n"
-		"out vec4 color; \n"
-		"void main(void) \n"
-		"{if (gl_FragCoord.x < 295) color = vec4(1.0, 0.0, 0.0, 1.0); else color = vec4(0.0, 0.0, 1.0, 1.0); }"; // color depends on position
 
 	// generates the two shaders of types GL_VERTEX_SHADER and GL_FRAGMENT_SHADER
 	// returns an integer ID for each that is an index for referencing it later
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	// declaring two shaders as character strings called vshaderSourceand fshaderSource
+	std::string vertShaderSource = readShaderSource("vertShader.glsl");
+	std::string fragShaderSource = readShaderSource("fragShader.glsl");
+
+	const char* vertShaderSrc = vertShaderSource.c_str();
+	const char* fargShaderSrc = fragShaderSource.c_str();
+
+	glShaderSource(vShader, 1, &vertShaderSrc, NULL);
+	glShaderSource(fShader, 1, &fargShaderSrc, NULL);
+
 	// loads the GLSL code from the strings into the empty shader objects.
 	/* glShaderSource() has four parameters: 
 	(a) the shader object ID in which to store the shader, 
@@ -32,8 +49,8 @@ GLuint createShaderProgram() {
 	code in each shader as being “1”, 
 	(c) an array of pointers to strings containing the source code, and 
 	(d) an additional parameter we aren’t using */
-	glShaderSource(vShader, 1, &vshaderSource, NULL);
-	glShaderSource(fShader, 1, &fshaderSource, NULL);
+	glShaderSource(vShader, 1, &vertShaderSrc, NULL);
+	glShaderSource(fShader, 1, &fargShaderSrc, NULL);
 
 	//The shaders are then each compiled using glCompileShader()
 	glCompileShader(vShader);
@@ -55,7 +72,7 @@ void init(GLFWwindow* window) {
 void display(GLFWwindow* window, double currentTime) {
 	glUseProgram(renderingProgram);
 	glPointSize(100.0f); // comment this line to let the vertex be on its default size
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawArrays(GL_POINTS, 0, 1);
 }
 int main(void) {
