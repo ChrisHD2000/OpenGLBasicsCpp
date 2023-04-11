@@ -71,9 +71,9 @@ void init(GLFWwindow* window) {
 }
 void display(GLFWwindow* window, double currentTime) {
 	glUseProgram(renderingProgram);
-	glPointSize(100.0f); // comment this line to let the vertex be on its default size
+	//glPointSize(100.0f); // comment this line to let the vertex be on its default size
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDrawArrays(GL_POINTS, 0, 1);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 int main(void) {
 	// (a) initializes the GLFW library
