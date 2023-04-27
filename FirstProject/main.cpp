@@ -32,7 +32,7 @@ GLuint createShaderProgram() {
 	GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
 	GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-	// declaring two shaders as character strings called vshaderSourceand fshaderSource
+	// declaring two shaders as strings called vertShaderSource and fragShaderSource
 	std::string vertShaderSource = readShaderSource("vertShader.glsl");
 	std::string fragShaderSource = readShaderSource("fragShader.glsl");
 
@@ -69,10 +69,28 @@ void init(GLFWwindow* window) {
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
 }
+
+// variables for movement
+
+float x = 0.0f;
+float inc = 0.01f;
+
 void display(GLFWwindow* window, double currentTime) {
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT); // clear the background to black, each time
+
 	glUseProgram(renderingProgram);
 	//glPointSize(100.0f); // comment this line to let the vertex be on its default size
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	x += inc;						// along X axis
+	if (x > 1.0f) inc = -0.01f;		// switch to moving the triangle to the left
+	if (x < -1.0f) inc = 0.01f;		// switch to moving the triangle to the right
+
+	GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset"); // get ptr to "offset" in the vertex shader program
+	glProgramUniform1f(renderingProgram, offsetLoc, x); // send value of x to "offset" through offsetLoc
+
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 int main(void) {
