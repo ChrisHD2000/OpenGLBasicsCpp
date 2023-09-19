@@ -6,6 +6,7 @@
 #include <string>
 using namespace std;
 namespace Utils {	
-	GLuint createShaderProgram();
+	GLuint createShaderProgramTriangle();
+	GLuint createShaderProgramPoint();
 	std::string readShaderSource(const char* filePath);
 }

@@ -13,7 +13,7 @@ GLuint renderingProgram;
 GLuint vao[numVAOs];
 
 void init(GLFWwindow* window) {
-	renderingProgram = Utils::createShaderProgram();
+	renderingProgram = Utils::createShaderProgramTriangle(); 
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
 }
@@ -22,7 +22,7 @@ void init(GLFWwindow* window) {
 float x = 0.0f;
 float inc = 0.01f;
 
-void display(GLFWwindow* window, double currentTime) {
+void display(GLFWwindow* window, double currentTime) { // Default Program
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT); // clear the background to black, each time
@@ -43,6 +43,23 @@ void display(GLFWwindow* window, double currentTime) {
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+
+//void display(GLFWwindow* window, double currentTime) { // For Points
+//	/*2.1 Modify Program 2.2 to add animation that causes the drawn point to grow and
+//	shrink, in a cycle.Hint: use the glPointSize() function, with a variable as the
+//	parameter.*/
+//	glClear(GL_DEPTH_BUFFER_BIT);
+//	glClearColor(0.0, 0.0, 0.0, 1.0);
+//	glClear(GL_COLOR_BUFFER_BIT); 
+//
+//	glUseProgram(renderingProgram); 
+//
+//	x += inc;						
+//	if (x > 1.0f) inc = -0.01f;		
+//	if (x < -0.0f) inc = 0.01f;		
+//	glPointSize(100.0f*x); 
+//	glDrawArrays(GL_POINTS, 0, 1);
+//}
 
 int main(void) {
 	// (a) initializes the GLFW library
