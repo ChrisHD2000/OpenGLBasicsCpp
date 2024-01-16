@@ -2,7 +2,30 @@
 #include "Utils.h"
 
 namespace Utils {
-	GLuint createShaderProgramPoint() { // For exercise 2.2
+	namespace Logging {
+		void logFrameSettings(float& currentTime, SettingType& type) {
+			static double intialTime = 0;
+			static float previousFrameDuration = 0;
+
+			// Calculates time since last frame or frame duration in seconds
+			float frameDuration = currentTime - intialTime;
+			float frameRate = 1 / frameDuration; // frame Duration sec. -> 1 frame (s)
+												  // 1 sec.	             -> ? frame (s)
+			float timeIncrement = frameDuration - previousFrameDuration;
+			if (type == SettingType::FRAME_RATE)
+				std::cout << "Frame Rate: " << frameRate << " FPS" << std::endl;
+			else if (type == SettingType::FRAME_DURATION)
+				std::cout << "Frame Duration: " << frameDuration << " sec." << std::endl;
+			else if (type == SettingType::FRAME_DURATION_INCREMENT)
+				std::cout << "Frame Duration Increment: " << ((timeIncrement >= 0.0f) ? "+" : "") << timeIncrement << " sec." << std::endl;
+
+			// Time stamp for the next iteration calculation.
+			previousFrameDuration = frameDuration;
+			intialTime = currentTime;
+		}
+	} // namespace Logging
+
+	GLuint createShaderProgramPoint() { // For exercise 2.2, NOT USED ANYMORE
 		const char* vshaderSource =
 			"#version 430 \n"
 			"void main(void) \n"
@@ -80,4 +103,5 @@ namespace Utils {
 		fileStream.close();
 		return content;
 	}
-}
+
+} // namespace Utils

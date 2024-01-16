@@ -14,6 +14,7 @@ GLuint vao[numVAOs];
 
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgramTriangle(); 
+	//renderingProgram = Utils::createShaderProgramPoint(); 
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
 }
@@ -26,7 +27,9 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT); // clear the background to black, each time
-
+	static double intialTime = 0;
+	static float previousFrameDuration = 0;
+	double finalTime;
 	glUseProgram(renderingProgram); //loads the program containing the 
 	//compiled shaders (vertex and fragment shader) into the OpenGL pipeline stages(onto the GPU!)
 	// NOTE that it doesn’t run the shaders, it just loads them onto the hardware
@@ -40,7 +43,9 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 
 	GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset"); // get ptr to "offset" in the vertex shader program
 	glProgramUniform1f(renderingProgram, offsetLoc, x); // send value of x to "offset" through offsetLoc
-
+	float currentTimef = (float) currentTime;
+	Utils::Logging::SettingType conf = Utils::Logging::SettingType::FRAME_DURATION_INCREMENT;
+	Utils::Logging::logFrameSettings(currentTimef, conf);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
