@@ -13,7 +13,7 @@ GLuint renderingProgram;
 GLuint vao[numVAOs];
 
 void init(GLFWwindow* window) {
-	renderingProgram = Utils::createShaderProgramTriangle(); 
+	renderingProgram = Utils::createShaderProgramTriangle();
 	//renderingProgram = Utils::createShaderProgramPoint(); 
 	glGenVertexArrays(numVAOs, vao);
 	glBindVertexArray(vao[0]);
@@ -33,18 +33,17 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glUseProgram(renderingProgram); //loads the program containing the 
 	//compiled shaders (vertex and fragment shader) into the OpenGL pipeline stages(onto the GPU!)
 	// NOTE that it doesn’t run the shaders, it just loads them onto the hardware
-	
+
 	//glPointSize(100.0f); // comment this line to let the vertex be on its default size
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
 	x += inc;						// along X axis
 	if (x > 1.0f) inc = -0.01f;		// switch to moving the triangle to the left
 	if (x < -1.0f) inc = 0.01f;		// switch to moving the triangle to the right
 
 	GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset"); // get ptr to "offset" in the vertex shader program
 	glProgramUniform1f(renderingProgram, offsetLoc, x); // send value of x to "offset" through offsetLoc
-	float currentTimef = (float) currentTime;
-	Utils::Logging::SettingType conf = Utils::Logging::SettingType::FRAME_DURATION_INCREMENT;
+	float currentTimef = (float)currentTime;
+	Utils::Logging::SettingType conf = Utils::Logging::SettingType::NO_FRAME_SETTINGS;
 	Utils::Logging::logFrameSettings(currentTimef, conf);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }

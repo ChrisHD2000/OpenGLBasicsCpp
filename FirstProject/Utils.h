@@ -5,15 +5,17 @@
 #include <fstream>
 #include <string>
 using namespace std;
-namespace Utils {		
+namespace Utils {
 	GLuint createShaderProgramTriangle();
 	GLuint createShaderProgramPoint();
 	std::string readShaderSource(const char* filePath);
 	namespace Logging {
 		enum SettingType {
-			FRAME_RATE, 
+			FRAME_RATE,
 			FRAME_DURATION,
-			FRAME_DURATION_INCREMENT};
+			FRAME_DURATION_INCREMENT,
+			NO_FRAME_SETTINGS
+		};
 		void logFrameSettings(float& currentTime, SettingType& type);
 	} // namespace Logging
 } // namespace Utils

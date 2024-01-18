@@ -1,6 +1,6 @@
 
 #include "Utils.h"
-
+#include "Exceptions.h"
 namespace Utils {
 	namespace Logging {
 		void logFrameSettings(float& currentTime, SettingType& type) {
@@ -10,21 +10,23 @@ namespace Utils {
 			// Calculates time since last frame or frame duration in seconds
 			float frameDuration = currentTime - intialTime;
 			float frameRate = 1 / frameDuration; // frame Duration sec. -> 1 frame (s)
-												  // 1 sec.	             -> ? frame (s)
+													// 1 sec.	             -> ? frame (s)
 			float timeIncrement = frameDuration - previousFrameDuration;
 			if (type == SettingType::FRAME_RATE)
-				std::cout << "Frame Rate: " << frameRate << " FPS" << std::endl;
+				std::cout << frameRate << " FPS" << std::endl;
 			else if (type == SettingType::FRAME_DURATION)
-				std::cout << "Frame Duration: " << frameDuration << " sec." << std::endl;
+				std::cout << frameDuration << " sec." << std::endl;
 			else if (type == SettingType::FRAME_DURATION_INCREMENT)
-				std::cout << "Frame Duration Increment: " << ((timeIncrement >= 0.0f) ? "+" : "") << timeIncrement << " sec." << std::endl;
+				std::cout << ((timeIncrement >= 0.0f) ? "+" : "") << timeIncrement << " sec." << std::endl;
 
 			// Time stamp for the next iteration calculation.
 			previousFrameDuration = frameDuration;
 			intialTime = currentTime;
 		}
-	} // namespace Logging
+	} // Logging
+} // Utils
 
+namespace Utils {
 	GLuint createShaderProgramPoint() { // For exercise 2.2, NOT USED ANYMORE
 		const char* vshaderSource =
 			"#version 430 \n"
@@ -54,6 +56,11 @@ namespace Utils {
 	}
 
 	GLuint createShaderProgramTriangle() {
+		// catch errors while compiling shaders
+		GLint vertCompiled;
+		GLint fragCompiled;
+		GLint linked;
+
 		// generates the two shaders of types GL_VERTEX_SHADER and GL_FRAGMENT_SHADER
 		// returns an integer ID for each that is an index for referencing it later
 		GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
@@ -81,7 +88,20 @@ namespace Utils {
 
 		//The shaders are then each compiled using glCompileShader()
 		glCompileShader(vShader);
+		Exceptions::checkOpenGLError();
+		glGetShaderiv(vShader, GL_COMPILE_STATUS, &vertCompiled);
+		if (vertCompiled != 1) {
+			cout << "vertex compilation failed" << endl;
+			Exceptions::printShaderLog(vShader);
+		}
+
 		glCompileShader(fShader);
+		Exceptions::checkOpenGLError();
+		glGetShaderiv(fShader, GL_COMPILE_STATUS, &fragCompiled);
+		if (fragCompiled != 1) {
+			cout << "fragment compilation failed" << endl;
+			Exceptions::printShaderLog(fShader);
+		}
 
 		// saves the integer ID that points to it
 		GLuint vfProgram = glCreateProgram();
@@ -89,6 +109,12 @@ namespace Utils {
 		glAttachShader(vfProgram, fShader);
 		// request that the GLSL compiler ensure that they are compatible
 		glLinkProgram(vfProgram);
+		Exceptions::checkOpenGLError();
+		glGetProgramiv(vfProgram, GL_LINK_STATUS, &linked);
+		if (linked != 1) {
+			cout << "linking failed" << endl;
+			Exceptions::printProgramLog(vfProgram);
+		}
 		return vfProgram;
 	}
 
