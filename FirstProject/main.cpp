@@ -36,8 +36,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 
 	//glPointSize(100.0f); // comment this line to let the vertex be on its default size
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	x = 1.0;				 // angle to rotate the triangle		
-
+	x = x + inc;				 // angle to rotate the triangle		
 	GLuint angleLoc = glGetUniformLocation(renderingProgram, "angle"); // get ptr to "offset" in the vertex shader program
 	glProgramUniform1f(renderingProgram, angleLoc, x); // send value of x to "offset" through offsetLoc
 	float currentTimef = (float)currentTime;
