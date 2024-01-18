@@ -36,12 +36,10 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 
 	//glPointSize(100.0f); // comment this line to let the vertex be on its default size
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	x += inc;						// along X axis
-	if (x > 1.0f) inc = -0.01f;		// switch to moving the triangle to the left
-	if (x < -1.0f) inc = 0.01f;		// switch to moving the triangle to the right
+	x = 1.0;				 // angle to rotate the triangle		
 
-	GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset"); // get ptr to "offset" in the vertex shader program
-	glProgramUniform1f(renderingProgram, offsetLoc, x); // send value of x to "offset" through offsetLoc
+	GLuint angleLoc = glGetUniformLocation(renderingProgram, "angle"); // get ptr to "offset" in the vertex shader program
+	glProgramUniform1f(renderingProgram, angleLoc, x); // send value of x to "offset" through offsetLoc
 	float currentTimef = (float)currentTime;
 	Utils::Logging::SettingType conf = Utils::Logging::SettingType::NO_FRAME_SETTINGS;
 	Utils::Logging::logFrameSettings(currentTimef, conf);
@@ -68,11 +66,11 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 int main(void) {
 	// (a) initializes the GLFW library
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
-
+			  
 	// (b) instantiates a GLFWwindow
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(600, 600, "Chapter2 - program1", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(600, 600, "Chapter3 - program2.5", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	// (c) initializes the GLEW library
