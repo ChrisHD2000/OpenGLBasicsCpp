@@ -27,35 +27,7 @@ namespace Utils {
 } // Utils
 
 namespace Utils {
-	GLuint createShaderProgramPoint() { // For exercise 2.2, NOT USED ANYMORE
-		const char* vshaderSource =
-			"#version 430 \n"
-			"void main(void) \n"
-			"{ gl_Position = vec4(0.0, 0.0, 0.0, 1.0); }";
-		const char* fshaderSource =
-			"#version 430 \n"
-			"out vec4 color; \n"
-			"void main(void) \n"
-			"{ color = vec4(0.0, 0.0, 1.0, 1.0); }";
-
-		GLuint vShader = glCreateShader(GL_VERTEX_SHADER);
-		GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-		glShaderSource(vShader, 1, &vshaderSource, NULL);
-		glShaderSource(fShader, 1, &fshaderSource, NULL);
-
-		glCompileShader(vShader);
-		glCompileShader(fShader);
-
-		GLuint vfProgram = glCreateProgram();
-		glAttachShader(vfProgram, vShader);
-		glAttachShader(vfProgram, fShader);
-
-		glLinkProgram(vfProgram);
-		return vfProgram;
-	}
-
-	GLuint createShaderProgramTriangle() {
+	GLuint createShaderProgram(const char* vertexShaderProgram, const char* fragmentShaderProgram) {
 		// catch errors while compiling shaders
 		GLint vertCompiled;
 		GLint fragCompiled;
@@ -67,8 +39,8 @@ namespace Utils {
 		GLuint fShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 		// declaring two shaders as strings called vertShaderSource and fragShaderSource
-		std::string vertShaderSource = readShaderSource("vertShader.glsl");
-		std::string fragShaderSource = readShaderSource("fragShader.glsl");
+		std::string vertShaderSource = readShaderSource(vertexShaderProgram);
+		std::string fragShaderSource = readShaderSource(fragmentShaderProgram);
 
 		const char* vertShaderSrc = vertShaderSource.c_str();
 		const char* fargShaderSrc = fragShaderSource.c_str();
