@@ -89,7 +89,7 @@ void setupVertices(void) { // 36 vertices, 12 triangles, 6 faces, make 2x2x2 cub
 	 -1.0f,  1.0f,  1.0f,
 	 -1.0f,  1.0f, -1.0f
 	};
-
+	std::cout << "Initializing VAOs and VBOs..." << std::endl;
 	// Initialize Vertex Array Object (VAO) and Vertex Buffer Objects (VBOs)
 	glGenVertexArrays(numVAOs, vao);			 // Generate numVAOs = 1 VAO and store its ID all along vao[] array
 																				 // So at this point, vao[0] already contains an ID value
@@ -113,12 +113,10 @@ void init(GLFWwindow* window) {
 	setupVertices();
 }
 
-// variables for movement
-float x = 0.0f;
-float inc = 0.01f;
-
 void display(GLFWwindow* window, double currentTime) { // Default Program
 	glClear(GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glm::mat4 tMat, rMat;
 	glUseProgram(renderingProgram);
 	// get the uniform variables for the MV and projection matrices
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
@@ -129,14 +127,22 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 	// build view matrix, model matrix, and model-view matrix
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
-	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
+	tMat = glm::translate(glm::mat4(1.0f),
+												glm::vec3(sin(0.35f * currentTime) * 2.0f,
+																	cos(0.52f * currentTime) * 2.0f, 
+																	sin(0.7f * currentTime) * 2.0f));
+	rMat = glm::rotate(glm::mat4(1.0f), 1.75f * (float)currentTime, glm::vec3(0.0f, 1.0f, 0.0f));
+	rMat = glm::rotate(rMat, 1.75f * (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
+	rMat = glm::rotate(rMat, 1.75f * (float)currentTime, glm::vec3(0.0f, 0.0f, 1.0f));
+	mMat = tMat * rMat;
 	mvMat = vMat * mMat;
 
 	// copy perspective and MV matrices to corresponding uniform variables
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 	// associate VBO with the corresponding vertex attribute in the vertex shader
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	// glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // already binded??
+	// is used to specify the data format of individual vertex attributes
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 	// adjust OpenGL settings and draw model
@@ -146,15 +152,18 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 }
 
 int main(void) {
+	std::cout << "Starting GLFW..." << std::endl;
 	// (a) initializes the GLFW library
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 			  
+	std::cout << "Instantiating window..." << std::endl;
 	// (b) instantiates a GLFWwindow
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(600, 600, "Chapter3 - program2.5", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(600, 600, "Chapter 4 - Managing 3D Graphics Data", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
+	std::cout << "Instantiating GLEW library..." << std::endl;
 	// (c) initializes the GLEW library
 	if (glewInit() != GLEW_OK) { exit(EXIT_FAILURE); }
 	glfwSwapInterval(1);
