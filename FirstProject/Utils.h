@@ -6,8 +6,7 @@
 #include <string>
 using namespace std;
 namespace Utils {
-	GLuint createShaderProgramTriangle();
-	GLuint createShaderProgramPoint();
+	GLuint createShaderProgram(const char* vertexShaderProgram, const char* fragmentShaderProgram);
 	std::string readShaderSource(const char* filePath);
 	namespace Logging {
 		enum SettingType {
