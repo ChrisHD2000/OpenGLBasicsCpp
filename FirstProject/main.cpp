@@ -153,6 +153,7 @@ void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
 	cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down Y to reveal perspective
+	pyrLocX = 0.0f; pyrLocY = 2.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective
 	setupVertices();
 }
 
@@ -186,7 +187,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	// draw the pyramid (use buffer #1)
-	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(pyrLocX, pyrLocY, pyrLocZ));
+	mMat = glm::translate(glm::mat4(2.0f), glm::vec3(pyrLocX, pyrLocY, pyrLocZ));
 	mvMat = vMat * mMat;
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
