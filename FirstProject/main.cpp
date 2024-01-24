@@ -22,9 +22,9 @@ GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 
 // Allocate variables used in display() function, so that they won’t need to be allocated during rendering
-GLuint mvLoc, projLoc;
+GLuint vLoc, projLoc;
 int width, height;
-float aspect;
+float aspect, tfLoc;
 glm::mat4 pMat, vMat, mMat, mvMat;
 
 void setupVertices(void) { // 36 vertices, 12 triangles, 6 faces, make 2x2x2 cube placed at origin
@@ -116,46 +116,33 @@ void init(GLFWwindow* window) {
 void display(GLFWwindow* window, double currentTime) { // Default Program
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT); //clearing the depth buffer each time through 
-															  //display() to ensure correct hidden surface removal
-	glm::mat4 tMat, rMat;
+																//display() to ensure correct hidden surface removal
+;
 	glUseProgram(renderingProgram);
-	// get the uniform variables for the MV and projection matrices
-	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
-	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
-	// build perspective matrix
 	glfwGetFramebufferSize(window, &width, &height);
-	aspect = (float)width / (float)height;
-	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
-	// build view matrix, model matrix, and model-view matrix
-	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -3.f * cameraZ));
-	float tf;
-	for (int i = 0; i < 24; i++) {
-		tf = currentTime + i; // tf == "time factor", declared as type float
-		// use current time to compute different translations in x, y, and z
-		tMat = glm::translate(glm::mat4(1.0f), 
-													glm::vec3(
-													sin(.35f * tf) * 8.0f, 
-													cos(.52f * tf) * 8.0f,
-													sin(.70f * tf) * 8.0f));
-		rMat = glm::rotate(glm::mat4(1.0f), 1.75f * (float)currentTime, glm::vec3(0.0f, 1.0f, 0.0f));
-		rMat = glm::rotate(rMat, 1.75f * (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f));
-		rMat = glm::rotate(rMat, 1.75f * (float)currentTime, glm::vec3(0.0f, 0.0f, 1.0f));
-		mMat = tMat * rMat;
-		mvMat = vMat * mMat;
 
-		// copy perspective and MV matrices to corresponding uniform variables
-		glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
-		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
-		// associate VBO with the corresponding vertex attribute in the vertex shader
-		// glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // already binded??
-		// is used to specify the data format of individual vertex attributes
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(0);
-		// adjust OpenGL settings and draw model
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
+	//computations that build(and transform) mMat have been moved to the vertex shader.
+	// there is no longer any need to build an MV matrix in the C++ application.
+	vLoc = glGetUniformLocation(renderingProgram, "v_matrix");
+	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
+	tfLoc = glGetUniformLocation(renderingProgram, "tf"); // (the shader needs that too)
+	aspect = (float)width / (float)height;
+
+	// build perspective and view matrix
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
+	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -20.0*cameraZ));
+	float timeFactor = ((float)currentTime); // uniform for the time factor
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	glUniformMatrix4fv(vLoc, 1, GL_FALSE, glm::value_ptr(vMat)); // shader needs the V matrix
+	glUniform1f(tfLoc, (float)timeFactor);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+	// adjust OpenGL settings and draw model
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 100000);
+
 }
 
 int main(void) {
