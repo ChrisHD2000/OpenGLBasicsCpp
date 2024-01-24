@@ -44,7 +44,7 @@ mat4 buildTranslate(float x, float y, float z){
 }
 
 mat4 buildRotateX(float theta){ 
-	theta = theta/3.14;
+	theta = theta;
 	mat4 rot = mat4( 1.0,     0.0,        0.0,     0.0,
 					 0.0,  cos(theta), sin(theta), 0.0,
 					 0.0, -sin(theta), cos(theta), 0.0,
@@ -53,7 +53,7 @@ mat4 buildRotateX(float theta){
 }
 
 mat4 buildRotateY(float theta){ 
-	theta = theta/3.14;
+	theta = theta;
 	mat4 rot = mat4( cos(theta), 0.0, -sin(theta), 0.0,
 					    0.0,     1.0,     0.0,     0.0,
 					 sin(theta), 0.0,  cos(theta), 0.0,
@@ -62,7 +62,7 @@ mat4 buildRotateY(float theta){
 }
 
 mat4 buildRotateZ(float theta){
-	theta = theta/3.14;
+	theta = theta;
 	mat4 rot = mat4( cos(theta),  sin(theta), 0.0, 0.0,
 					-sin(theta),  cos(theta), 0.0, 0.0,
 					    0.0,         0.0,     1.0, 0.0,
