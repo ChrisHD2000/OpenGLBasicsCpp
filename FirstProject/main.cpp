@@ -144,7 +144,7 @@ void setupVertices(void) {
 	//VBO 2
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); // Select the vbo[0] ID as the current GL_ARRAY_BUFFER, we have 2 in this case
 																				 // 1. vao[0] SELECTED AND vbo[1] SELECTED by their ID
-	// So from now on vao[0] and vbo[0] is the current buffer where our instructions are going to be applied
+	// So from now on vao[0] and vbo[1] is the current buffer where our instructions are going to be applied
 	// Upload vertex data to the selected VBO. Note that HERE is where we define the size of the buffer
 	glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW);
 }
@@ -166,7 +166,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	// get the uniform variables for the MV and projection matrices
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
-
+	std::cout << "mvLoc: " << mvLoc << "projLoc: " << projLoc << std::endl;
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
