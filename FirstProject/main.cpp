@@ -156,6 +156,11 @@ void init(GLFWwindow* window) {
 	cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down Y to reveal perspective
 	pyrLocX = 0.0f; pyrLocY = 2.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective
 	setupVertices();
+	// pre compute perspective matrix.
+	glfwGetFramebufferSize(window, &width, &height);
+	aspect = (float)width / (float)height;
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
+
 }
 
 std::stack<glm::mat4> mvStack;
@@ -168,9 +173,6 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	// get the uniform variables for the MV and projection matrices
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
-	glfwGetFramebufferSize(window, &width, &height);
-	aspect = (float)width / (float)height;
-	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 
 	// push view matrix onto the stack
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
@@ -229,7 +231,13 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glDepthFunc(GL_LEQUAL);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	// remove moon scale / rotation / position, planet position, sun position, and view matrices from stack
-	mvStack.pop(); mvStack.pop(); mvStack.pop(); mvStack.pop();
+	//mvStack.pop(); mvStack.pop(); mvStack.pop(); mvStack.pop();
+}
+
+void window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight) {
+	aspect = (float)newWidth / (float)newHeight; // new width&height provided by the callback
+	glViewport(0, 0, newWidth, newHeight); // sets screen region associated with framebuffer 
+	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
 
 int main(void) {
@@ -248,6 +256,9 @@ int main(void) {
 	// (c) initializes the GLEW library
 	if (glewInit() != GLEW_OK) { exit(EXIT_FAILURE); }
 	glfwSwapInterval(1);
+
+	// Gets called everytime the Windows is resized
+	glfwSetWindowSizeCallback(window, window_reshape_callback);
 
 	// (d) calls the function “init()” ONCE
 	init(window);
