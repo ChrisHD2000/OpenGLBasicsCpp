@@ -202,9 +202,9 @@ void init(GLFWwindow* window) {
 //float Vx =  0.f,    Vy = 1.f,  Vz = 0.f;
 //float Nx = -0.707f, Ny = 0.f,  Nz = 0.707f;
 
-float Ux =  0.707f, Uy = 0.f,  Uz = 0.707f;
-float Vx =  0.f,    Vy = 1.f,  Vz = 0.f;
-float Nx = 0.316f, Ny = 0.f,  Nz = 0.948f;
+float Ux = 0.707f, Uy = 0.f, Uz = 0.707f;
+float Vx = 0.f, Vy = 1.f, Vz = 0.f;
+float Nx = 0.316f, Ny = 0.f, Nz = 0.948f;
 
 
 void display(GLFWwindow* window, double currentTime) { // Default Program
@@ -218,20 +218,22 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
 
 	// Setup camera (view matrix)
-	
+	static float x = 0;
+	x += -0.005;
 	tMat = glm::mat4(
 										1.f, 0.f, 0.f, 0.f,		
 										0.f, 1.f, 0.f, 0.f,
 										0.f, 0.f, 1.f, 0.f,
-										0.f, 0.f, -10.f, 1.f); // This translation
+										0.f, 0.f, -10, 1.f); // This translation
 	//rMat = glm::rotate(glm::mat4(1.0f), 0.758f, glm::vec3(0.f, 1.f, 0.f)); // This rotation
-	rMat = glm::mat4(
-		Ux,  Vx,  Nx,  0.f,
-		Uy,  Vy,  Ny,  0.f,
-		Uz,  Vz,  Nz,  0.f,
-		0.f, 0.f, 0.f, 1.f); // This rotation
-	
-	vMat = tMat * rMat;
+	//rMat = glm::mat4(
+	//	Ux,  Vx,  Nx,  0.f,
+	//	Uy,  Vy,  Ny,  0.f,
+	//	Uz,  Vz,  Nz,  0.f,
+	//	0.f, 0.f, 0.f, 1.f); // This rotation
+
+	rMat = glm::rotate(glm::mat4(1.0f), x, glm::vec3(0.f, 1.f, 0.f));
+	vMat = rMat * tMat; // This is the right order
 
 	// Setup 3D model matrix
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
