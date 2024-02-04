@@ -338,7 +338,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 
 	//----------------------- model == planet2 ---------------------------------------------
 	mvStack.push(mvStack.top());
-	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(-sin((float)currentTime) * 8.0, 0.0f, cos((float)currentTime) * 8.0));
+	mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(sin((float)currentTime*1.5f) * 6.0f, 0.0f, cos((float)currentTime*1.5f) * 6.0f));
 	mvStack.push(mvStack.top());
 	mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0, 1.0, 0.0));
 	mvStack.push(mvStack.top());
