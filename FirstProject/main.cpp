@@ -28,6 +28,7 @@ float aspect, tfLoc;
 
 glm::mat4 pMat, vMat, mMat, mvMat;
 BasicModels::Cube myCube;
+BasicModels::Cube myCube2;
 
 void init(GLFWwindow* window) {
 	renderingProgram = Utils::createShaderProgram("vertShader.glsl", "fragShader.glsl");
@@ -45,6 +46,7 @@ void init(GLFWwindow* window) {
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 	myCube.init(vbo[0]);
+	myCube2.init(vbo[1]);
 }
 
 void display(GLFWwindow* window, double currentTime) { // Default Program
@@ -57,7 +59,14 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	vMat = glm::lookAt(eye, target, cameraUp);
 	myCube.setupPerspectiveAndView(pMat, vMat);
+	myCube.setLocation((float)-currentTime*3.0f, 0.f, 0.f);
+	myCube.setScale(4.f, 0.5f, 0.5f);
 	myCube.display(currentTime);
+	
+	myCube2.setupPerspectiveAndView(pMat, vMat);
+	myCube2.setLocation(0.0f, (float)currentTime*2.f, 0.f);
+	myCube2.setScale(1.5f, 4.f, 0.2f);
+	myCube2.display(currentTime);
 }
 
 void window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight) {
@@ -75,7 +84,7 @@ int main(void) {
 	// (b) instantiates a GLFWwindow
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	GLFWwindow* window = glfwCreateWindow(600, 600, "Chapter 4 - Managing 3D Graphics Data", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(600, 600, "My Own Project", NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	std::cout << "Instantiating GLEW library..." << std::endl;

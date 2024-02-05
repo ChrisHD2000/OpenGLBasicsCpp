@@ -13,14 +13,17 @@ namespace BasicModels {
 		GLuint vbo, renderingProgram,  mvLoc, projLoc;
 		glm::mat4 vMat;
 		glm::mat4 pMat;
+		glm::mat4 tMat, rMat, sMat;
+		glm::mat4 mMat, vmMat;
 	public:
-		Cube() : X(0), Y(0), Z(0) {}
-		Cube(float x, float y, float z) : X(x), Y(y), Z(z) {}
+		Cube();
 		~Cube() {};
 		void init(GLuint& vbo);
 		void display(double &currentTime);
 		void setupPerspectiveAndView(glm::mat4 &perspective, glm::mat4 &view);
-
+		void setLocation(float x, float y, float z);
+		void setScale(float x, float y, float z);
+		
 
 	};
 }

@@ -96,7 +96,6 @@ namespace Utils {
 		string line = "";
 		while (!fileStream.eof()) {
 			getline(fileStream, line);
-			std::cout << line << std::endl;
 			content.append(line + "\n");
 		}
 		fileStream.close();
