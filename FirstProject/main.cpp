@@ -317,7 +317,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 
 	// push view matrix onto the stack
 	vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
-	glm::vec3 eye = glm::vec3(10.f, 20.f, -12.f);
+	glm::vec3 eye = glm::vec3(10.f, 2.f, -12.f);
 	glm::vec3 target = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	vMat = glm::lookAt(eye, target, cameraUp);
