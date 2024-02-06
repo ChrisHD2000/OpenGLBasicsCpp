@@ -1,9 +1,13 @@
 #include "Cube.h"
-#include <iostream>
+
 namespace BasicModels {
 	Cube::Cube() : X(0), Y(0), Z(0) {
 		tMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-		rMat = glm::rotate(glm::mat4(1.0f), 0.f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		rxMat = glm::rotate(glm::mat4(1.0f), 0.f, glm::vec3(1.0f, 0.0f, 0.0f));
+		ryMat = glm::rotate(glm::mat4(1.0f), 0.f, glm::vec3(0.0f, 1.0f, 0.0f));
+		rzMat = glm::rotate(glm::mat4(1.0f), 0.f, glm::vec3(0.0f, 0.0f, 1.0f));
+
 		sMat = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	}
 
@@ -82,6 +86,7 @@ namespace BasicModels {
 
 	void Cube::display(double& currentTime) {
 		glUseProgram(renderingProgram);
+		rMat = rxMat * ryMat * rzMat;
 		mMat = tMat * rMat * sMat;
 		vmMat = vMat * mMat;
 		mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
@@ -107,6 +112,21 @@ namespace BasicModels {
 
 	void Cube::setScale(float x, float y, float z){
 		sMat = glm::scale(glm::mat4(1.0f), glm::vec3(x,y,z));
+	}
+
+	void Cube::setRotationX(float theta){
+		theta = theta * 3.1415f /180;
+		rxMat = glm::rotate(glm::mat4(1.0f), theta, glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
+	void Cube::setRotationY(float theta){
+		theta = theta * 3.1415f / 180;
+		ryMat = glm::rotate(glm::mat4(1.0f), theta, glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	void Cube::setRotationZ(float theta){
+		theta = theta * 3.1415f / 180;
+		rzMat = glm::rotate(glm::mat4(1.0f), theta, glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 
 };

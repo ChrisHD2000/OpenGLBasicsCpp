@@ -26,7 +26,10 @@ GLuint mvLoc, projLoc;
 int width, height;
 float aspect, tfLoc;
 
-glm::mat4 pMat, vMat, mMat, mvMat;
+glm::mat4 pMat, vMat, vMat2, mMat, mvMat;
+glm::vec3 eye = glm::vec3(10.f, 10.f, -12.f);
+glm::vec3 target = glm::vec3(0.f, 0.f, 0.f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 BasicModels::Cube myCube;
 BasicModels::Cube myCube2;
 
@@ -45,27 +48,28 @@ void init(GLFWwindow* window) {
 	glfwGetFramebufferSize(window, &width, &height); // pre compute perspective matrix.
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
+	vMat = glm::lookAt(eye, target, cameraUp);
+	vMat2 = glm::lookAt(-eye, target, cameraUp); // Can create custom perspectives
 	myCube.init(vbo[0]);
+	myCube.setupPerspectiveAndView(pMat, vMat);
 	myCube2.init(vbo[1]);
+	myCube2.setupPerspectiveAndView(pMat, vMat);
 }
 
 void display(GLFWwindow* window, double currentTime) { // Default Program
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT); //clearing the depth buffer each time through 
 																//display() to ensure correct hidden surface removal
-
-	glm::vec3 eye = glm::vec3(10.f, 10.f, -12.f);
-	glm::vec3 target = glm::vec3(0.f, 0.f, 0.f);
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	vMat = glm::lookAt(eye, target, cameraUp);
-	myCube.setupPerspectiveAndView(pMat, vMat);
+	
 	myCube.setLocation((float)-currentTime*3.0f, 0.f, 0.f);
 	myCube.setScale(4.f, 0.5f, 0.5f);
+	myCube.setRotationZ((float)currentTime * 200.f);
 	myCube.display(currentTime);
 	
-	myCube2.setupPerspectiveAndView(pMat, vMat);
 	myCube2.setLocation(0.0f, (float)currentTime*2.f, 0.f);
 	myCube2.setScale(1.5f, 4.f, 0.2f);
+	myCube2.setRotationX((float)currentTime * 200.f);
+	myCube2.setRotationY((float)currentTime * 200.f);
 	myCube2.display(currentTime);
 }
 
