@@ -3,7 +3,6 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <cmath>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -27,144 +26,68 @@ GLuint mvLoc, projLoc;
 int width, height;
 float aspect, tfLoc;
 glm::mat4 pMat, vMat, mMat, rMat, sMat, tMat, mvMat;
+GLuint brickTexture = Utils::loadTexture("Textures/brick1.jpg");
 
 void setupVertices(void) {
 	// model with 270 vertices
-	float modelPositions[270] = {
-		// Face 1
-	 -1.02947f, 0.377139f, -0.377139f,
-	 -1.02947f,	0.377139f, 0.377139f,
-	 -0.377139f,0.377139f, 0.377139f,
+	float modelPositions[108] = {
+   -1.0f,	 1.0f, -1.0f,
+	 -1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f, -1.0f,
 
-	 -1.02947f, 0.377139f, -0.377139f,
-	 -0.377139f,0.377139f, 0.377139f,
-	 -0.377139, 0.377139f, -0.377139f,
+		1.0f, -1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+	 -1.0f,  1.0f, -1.0f,
 
 	 // Face 2
-	-1.02947f, 0.377139f, -0.377139,
-	-0.377139, 0.377139f, -0.377139f,
-	-0.377139f,-0.377139f,-0.377139f,
 
-	-1.02947f, -0.377139f, -0.377139f,
-	-1.02947f, 0.377139f,  -0.377139f,
-	-0.377139f, -0.377139f,-0.377139f,
+		1.0f, -1.0f, -1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
+
+		1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f, -1.0f,
 
 		// Face 3
-	-1.02947f, 0.377139f, 0.377139f,
-	-1.02947f, -0.377139f,0.377139f,
-	-1.02947f, 0.377139f, -0.37581f,
 
-	-1.02947f, 0.377139f,  -0.37581f,
-	-1.02947f, -0.377139f,  0.377139f,
-	-1.02947f, -0.377139f, -0.377139f,
+		1.0f, -1.0f,  1.0f,
+	 -1.0f, -1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
+
+	 -1.0f, -1.0f,  1.0f,
+	 -1.0f,  1.0f,  1.0f,
+		1.0f,  1.0f,  1.0f,
 
 		// Face 4
-	 -0.377139, 0.377139f, 0.377139f,
-	 -0.377139f, -0.377139f, 0.377139f,
-	 -1.02947f,  0.377139f,  0.377139f,
 
-	 -1.02947f, 0.377139f, 0.377139f,
-	 -0.377139f,-0.377139f,0.377139f,
-	 -1.02947f, -0.377139f,  0.377139f,
+	 -1.0f, -1.0f,  1.0f,
+	 -1.0f, -1.0f, -1.0f,
+	 -1.0f,  1.0f,  1.0f,
+
+	 -1.0f, -1.0f, -1.0f,
+	 -1.0f,  1.0f, -1.0f,
+	 -1.0f,  1.0f,  1.0f,
 
 	 // Face 5
-	 -0.377139f, 1.02947f, -0.377139f,
-	 -0.377139f, 1.02947f, 0.377139f,
-	 -0.377139f, 0.377139f, 0.377139f,
 
-	 -0.377139f, 1.02947f, -0.377139f,
-	 -0.377139f, 0.377139f, 0.377139f,
-	 -0.377139f, 0.377139f, -0.377139f,
+	 -1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f,  1.0f,
+		1.0f, -1.0f, -1.0f,
+
+		1.0f, -1.0f, -1.0f,
+	 -1.0f, -1.0f, -1.0f,
+	 -1.0f, -1.0f,  1.0f,
 
 	 // Face 6
-	 0.377139f,  1.02947f, -0.377139f,
-	-0.377139f,  1.02947f, -0.377139f,
-	-0.377139f,  0.377139f,-0.377139f,
 
-	0.377139f,  1.02947f, -0.377139f,
-	-0.377139f,  0.377139f,-0.377139f,
-	 0.377139f,  0.377139f, -0.377139f,
+	 -1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f, -1.0f,
+		1.0f,  1.0f,  1.0f,
 
-	 // face 7 
-	 -0.377139f, 1.02947f, -0.377139f,
-	 0.377139f, 1.02947f, 0.377139f,
-	-0.377139f, 1.02947f, 0.377139f,
-	 
-	0.377139f, 1.02947f, 0.377139f,
-	 -0.377139f, 1.02947f, -0.377139f,
-		0.377139f, 1.02947f, -0.377139f,
-		
-		// face 8 
-		0.377139f, 1.02947f, 0.377139f,
-		0.377139f, 1.02947f, -0.377139f,
-		0.377139f, 0.377139f, -0.377139f,
-	 
-		0.377139f, 1.02947f, 0.377139f,
-		0.377139f, 0.377139f,-0.377139f,
-		0.377139f, 0.377139f, 0.377139f,
-	 
-		// face 9 
-		-0.377139f, 1.02947f, 0.377139f,
-		0.377139f, 1.02947f, 0.377139f,
-		0.377139f, 0.377139f, 0.377139f,
-	 
-		-0.377139f, 1.02947f, 0.377139f,
-		0.377139f, 0.377139f, 0.377139f,
-		-0.377139f, 0.377139f, 0.377139f,
-				
-		// face 10 
-	 -0.377139f, 0.377139f, 0.377139f,
-		0.377139f, 0.377139f, 0.377139f,
-		0.377139f,-0.377139f, 0.377139f,
-	 
-		-0.377139f, 0.377139f, 0.377139f,
-		0.377139f, -0.377139f, 0.377139f,
-		-0.377139f, -0.377139f, 0.377139f,
-				
-		// face 11
-		0.377139f, 0.377139f, 0.377139f,
-		1.02947f, -0.377139f, 0.377139f,
-		0.377139f, -0.377139f, 0.377139f,
-	 
-		 0.377139f, 0.377139f, 0.377139f,
-		 1.02947f, 0.377139f, 0.377139f,
-		 1.02947f, -0.377139f, 0.377139f,
-				
-		// face 12 
-		 0.377139f, 0.377139f, 0.377139f,
-		 0.377139f, 0.377139f, -0.377139f,
-		 1.02947f, 0.377139f, -0.377139f,
-	 
-		0.377139f, 0.377139f, 0.377139f,
-		1.02947f, 0.377139f, -0.377139f,
-		1.02947f, 0.377139f, 0.377139f,
-				
-		// face 13 
-		1.02947f, 0.377139f, 0.377139f,
-		1.02947f, 0.377139f, -0.377139f,
-		1.02947f,-0.377139f,-0.377139f,
-	 
-		1.02947f, 0.377139f, 0.377139f,
-		1.02947f, -0.377139f, -0.377139f,
-		1.02947f, -0.377139f, 0.377139f,
-				
-		// face 14
-		1.02947f, 0.377139f, -0.377139f,
-		0.377139f, 0.377139f, -0.377139f,
-		0.377139f, -0.377139f, -0.377139f,
-	 
-		1.02947f, 0.377139f, -0.377139f,
-		0.377139, -0.377139f, -0.377139f,
-		1.02947f, -0.377139f, -0.377139f,
-				
-		// face 15 
-		 0.377139f, 0.377139f, -0.377139f,
-		-0.377139f, 0.377139f, -0.377139f,
-		-0.377139f, -0.377139f, -0.377139f,
-	 
-		 0.377139f, 0.377139f, -0.377139f,
-		 -0.377139f, -0.377139f, -0.377139f,
-		 0.377139f, -0.377139f, -0.377139f,
+		1.0f,  1.0f,  1.0f,
+	 -1.0f,  1.0f,  1.0f,
+	 -1.0f,  1.0f, -1.0f
 	};
 	// this is working
 	std::cout << "Initializing VAOs and VBOs..." << std::endl;
@@ -218,22 +141,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
 
 	// Setup camera (view matrix)
-	static float x = 0;
-	x += -0.005;
-	tMat = glm::mat4(
-										1.f, 0.f, 0.f, 0.f,		
-										0.f, 1.f, 0.f, 0.f,
-										0.f, 0.f, 1.f, 0.f,
-										0.f, 0.f, -10, 1.f); // This translation
-	//rMat = glm::rotate(glm::mat4(1.0f), 0.758f, glm::vec3(0.f, 1.f, 0.f)); // This rotation
-	//rMat = glm::mat4(
-	//	Ux,  Vx,  Nx,  0.f,
-	//	Uy,  Vy,  Ny,  0.f,
-	//	Uz,  Vz,  Nz,  0.f,
-	//	0.f, 0.f, 0.f, 1.f); // This rotation
-
-	rMat = glm::rotate(glm::mat4(1.0f), x, glm::vec3(0.f, 1.f, 0.f));
-	vMat = rMat * tMat; // This is the right order
+	vMat = glm::lookAt(glm::vec3(-10.f, 5.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
 
 	// Setup 3D model matrix
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
@@ -241,7 +149,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	// Setup model - view matrix
 	mvMat = vMat * mMat;
 
-	// draw the planet (use buffer #0)
+	// draw the cube (use buffer #0)
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
@@ -249,7 +157,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glEnableVertexAttribArray(0);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, 270);
+	glDrawArrays(GL_TRIANGLES, 0, 108);
 }
 
 void window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight) {
