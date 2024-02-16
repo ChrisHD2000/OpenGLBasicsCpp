@@ -27,6 +27,9 @@ int width, height;
 float aspect, tfLoc;
 glm::mat4 pMat, vMat, mMat, rMat, sMat, tMat, mvMat;
 
+// Texture
+GLuint brickTexture;
+
 void setupVertices(void) {
 	// model with 270 vertices
 	float pyramidPositions[54] = {
@@ -102,7 +105,7 @@ void init(GLFWwindow* window) {
 	glfwGetFramebufferSize(window, &width, &height);
 	aspect = (float)width / (float)height;
 	pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
-	GLuint brickTexture = Utils::loadTexture("Textures/brick1.jpg");
+	brickTexture = Utils::loadTexture("Textures/brick1.jpg");
 
 }
 
@@ -133,12 +136,23 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	// draw the cube (use buffer #0)
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
+	
+	// for the pyramid
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(0);
+
+	// for the texture
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, brickTexture);
+
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
-	glDrawArrays(GL_TRIANGLES, 0, 54);
+	glDrawArrays(GL_TRIANGLES, 0, 18);
 }
 
 void window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight) {
