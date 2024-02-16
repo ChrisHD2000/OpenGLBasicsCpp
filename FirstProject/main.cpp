@@ -125,10 +125,11 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	projLoc = glGetUniformLocation(renderingProgram, "proj_matrix");
 
 	// Setup camera (view matrix)
-	vMat = glm::lookAt(glm::vec3(-10.f, 5.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
+	vMat = glm::lookAt(glm::vec3(-5.f, 2.f, 3.f), glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
 
 	// Setup 3D model matrix
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));
+	mMat = glm::rotate(mMat, 2.f*(float)currentTime, glm::vec3(0.f, 1.f, 0.f));
 
 	// Setup model - view matrix
 	mvMat = vMat * mMat;
@@ -147,8 +148,8 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
 	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, brickTexture);
+	glActiveTexture(GL_TEXTURE0); // Actives the texture unit 0, layout (binding=0) uniform sampler2D samp;
+	glBindTexture(GL_TEXTURE_2D, brickTexture); // binds the texture with the GLuint value
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
