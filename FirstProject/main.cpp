@@ -134,16 +134,16 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	// Setup model - view matrix
 	mvMat = vMat * mMat;
 
-	// draw the cube (use buffer #0)
+	// Pass model view and projection matrix to the vertex shader
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
 	
-	// for the pyramid
+	// For the pyramid
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
-
-	// for the texture
+	// Notice that we bind the pyramid and the buffer and then we draw
+	// For the texture
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(1);
