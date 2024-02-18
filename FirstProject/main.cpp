@@ -142,7 +142,7 @@ void display(GLFWwindow* window, double currentTime) { // Default Program
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
-	// Notice that we bind the pyramid and the buffer and then we draw
+	// Notice that we bind the pyramid and the texture and then we draw
 	// For the texture
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
