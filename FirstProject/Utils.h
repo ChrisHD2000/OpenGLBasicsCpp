@@ -4,10 +4,12 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <SOIL2/SOIL2.h> // for textures
 using namespace std;
 namespace Utils {
 	GLuint createShaderProgram(const char* vertexShaderProgram, const char* fragmentShaderProgram);
 	std::string readShaderSource(const char* filePath);
+	GLuint loadTexture(const char* texImagePath);
 	namespace Logging {
 		enum SettingType {
 			FRAME_RATE,
